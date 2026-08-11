@@ -155,8 +155,8 @@ class LeagueloreCharacterSpider(scrapy.Spider):
                 response.url,
             )
         else:
-            logging.error("No new champs found stopping...")
-            self.crawler.engine.close_spider(self, "No new champs found")
+            logging.error("[%s] No new champs found, skipping.", kwargs["lang"])
+           
 
     def parse_champion(self, response, **kwargs):
         role = (
