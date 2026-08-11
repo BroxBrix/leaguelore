@@ -71,6 +71,7 @@ jobs:
       - name: Run scrapper
         id: scrapy
         env:
+          PYTHONPATH: .
           PREVIOUS_CHAMP_COUNT: ${{ steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
           scrapy crawl champions
