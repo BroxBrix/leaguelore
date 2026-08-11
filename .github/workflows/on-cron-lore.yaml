@@ -72,7 +72,7 @@ jobs:
         env:
           PREVIOUS_CHAMP_COUNT: ${{ steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
-          scrapy runspider leaguelore/spiders/champions.py
+          scrapy runspider leaguelore/spiders/champions.py -s SETTINGS_MODULE=leaguelore.settings
 
       - name: Upload updated DB
         uses: actions/upload-artifact@v4
