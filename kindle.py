@@ -159,6 +159,22 @@ def load():
 
     ## Create cursor, used to execute commands
     cur = con.cursor()
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS champions(
+        champion TEXT,
+        name TEXT,
+        lang TEXT,
+        story TEXT,
+        bio TEXT,
+        race TEXT,
+        title TEXT,
+        role TEXT,
+        region TEXT,
+        quote TEXT,
+        short_bio TEXT,
+        related_champions TEXT
+    )
+    """)
     cur.execute("select * from champions;")
     data = cur.fetchall()
     data.sort(key=itemgetter("lang"))
