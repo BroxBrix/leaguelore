@@ -8,8 +8,9 @@ import sqlite3
 import time
 import os
 import os.path
-import math
-import re
+import sys
+sys.path.insert(0, os.path.abspath("."))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from scrapy_playwright.page import PageMethod
 
