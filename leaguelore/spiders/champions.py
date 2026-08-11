@@ -144,7 +144,7 @@ class LeagueloreCharacterSpider(scrapy.Spider):
                             "playwright": True,
                             "playwright_page_methods": [
                                 PageMethod("wait_for_load_state", "domcontentloaded"),
-                                PageMethod("wait_for_timeout", 2000),
+                                PageMethod("wait_for_timeout", 5000),
                             ],
                         },
                     )
