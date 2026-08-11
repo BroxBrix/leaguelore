@@ -66,15 +66,14 @@ jobs:
       - name: Requirements
         if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT || inputs.dburl != '' }}
         run: |
-          chmod +x ./install.sh
-          ./install.sh
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
 
       - name: Run scrapper
         id: scrapy
         if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
-          chmod +x ./scrap.sh
-          ./scrap.sh
+          scrapy runspider leaguelore/spiders/champions.py
 
       - name: Upload updated DB
         uses: actions/upload-artifact@v4
