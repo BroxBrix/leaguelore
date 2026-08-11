@@ -65,7 +65,8 @@ jobs:
       - name: Requirements
         run: |
           pip install -r requirements.txt
-          playwright install --with-deps chromium
+          sudo playwright install-deps
+          playwright install chromium
 
       - name: Run scrapper
         id: scrapy
@@ -73,6 +74,7 @@ jobs:
           PREVIOUS_CHAMP_COUNT: ${{ steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
           scrapy crawl champions
+
       - name: Upload updated DB
         uses: actions/upload-artifact@v4
         with:
