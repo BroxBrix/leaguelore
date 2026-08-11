@@ -58,26 +58,24 @@ jobs:
            curl '${{ inputs.dburl }}' -L -s -o lore.db
 
       - name: Set up Python
-        if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT || inputs.dburl != '' }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
 
       - name: Requirements
-        if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT || inputs.dburl != '' }}
         run: |
           pip install -r requirements.txt
           playwright install --with-deps chromium
 
       - name: Run scrapper
         id: scrapy
-        if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
+        env:
+          PREVIOUS_CHAMP_COUNT: ${{ steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
           scrapy runspider leaguelore/spiders/champions.py
 
       - name: Upload updated DB
         uses: actions/upload-artifact@v4
-        if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT || inputs.dburl != '' }}
         with:
           name: lore.db
           path: |
@@ -85,7 +83,6 @@ jobs:
 
       - name: Run kindler
         id: kindle
-        if: ${{ steps.champ-count.outputs.CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
         run: |
           python kindle.py
           echo "NEW_CHAMP_COUNT=$(jq -r '.champ_count' meta.json)" >> "$GITHUB_OUTPUT"
