@@ -34,13 +34,17 @@ jobs:
         run: |
           RELEASE_JSON=$(curl -s -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' 'https://api.github.com/repos/${{ github.repository }}/releases/latest')
 
-          LATEST_RELEASE_NAME=$(echo "$RELEASE_JSON" | jq -r '.name')
-          LATEST_RELEASE_TAG=$(echo "$RELEASE_JSON" | jq -r '.tag_name')
-          if [ "$LATEST_RELEASE_NAME" == "null" ]; then
+          LATEST_RELEASE_NAME=$(echo "$RELEASE_JSON" | jq -r '.name // empty')
+          LATEST_RELEASE_TAG=$(echo "$RELEASE_JSON" | jq -r '.tag_name // empty')
+          if [ -z "$LATEST_RELEASE_TAG" ] || [ "$LATEST_RELEASE_TAG" == "null" ]; then
             LATEST_RELEASE_TAG="lollore-0"
+            LATEST_RELEASE_NAME="None"
           fi
 
           LATEST_RELEASE_CHAMP_COUNT=${LATEST_RELEASE_TAG#"lollore-"}
+          if ! [[ "$LATEST_RELEASE_CHAMP_COUNT" =~ ^[0-9]+$ ]]; then
+            LATEST_RELEASE_CHAMP_COUNT="0"
+          fi
 
           echo "Latest release name: $LATEST_RELEASE_NAME"
           echo "Latest release champ count: $LATEST_RELEASE_CHAMP_COUNT"
@@ -93,7 +97,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: ${{ steps.kindle.outputs.NEW_CHAMP_COUNT != '0' }}
+        if: ${{ steps.kindle.outputs.NEW_CHAMP_COUNT != '' && steps.kindle.outputs.NEW_CHAMP_COUNT != '0' }}
         with:
           name: "League of Legends lore - ${{ steps.kindle.outputs.NEW_CHAMP_COUNT }} Champions"
           tag_name: "lollore-${{ steps.kindle.outputs.NEW_CHAMP_COUNT }}"
