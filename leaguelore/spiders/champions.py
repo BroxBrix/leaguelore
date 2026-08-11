@@ -113,7 +113,7 @@ class LeagueloreCharacterSpider(scrapy.Spider):
             "Found new champs (%s)? %s"
             % (len(champ_blocks), len(champ_blocks) > PREVIOUS_CHAMP_COUNT)
         )
-        if len(champ_blocks) > PREVIOUS_CHAMP_COUNT or len(champ_blocks) > 0:
+        if len(champ_blocks) > 0:
             for champion in champ_blocks:
                 champ_url = champion.attrib["href"] if "href" in champion.attrib else champion.css("a")[0].attrib["href"]
                 champ_code = champ_url.rstrip("/").split("/")[-1]
