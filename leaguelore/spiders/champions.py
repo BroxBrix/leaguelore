@@ -106,6 +106,7 @@ class LeagueloreCharacterSpider(scrapy.Spider):
             yield scrapy.Request(
                 url,
                 cb_kwargs={"lang": lang},
+                dont_filter=True,
                 meta={
                     "playwright": True,
                     "playwright_page_methods": [
