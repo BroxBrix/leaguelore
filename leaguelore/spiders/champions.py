@@ -4,6 +4,8 @@ import scrapy
 import requests
 from PIL import Image
 import sqlite3
+import math
+import re
 
 import time
 import os
@@ -17,7 +19,10 @@ from scrapy_playwright.page import PageMethod
 from translations import LANGS
 # "https://universe.leagueoflegends.com/%s/champions/"
 
-PREVIOUS_CHAMP_COUNT = int(os.environ.get("PREVIOUS_CHAMP_COUNT", "0"))
+try:
+    PREVIOUS_CHAMP_COUNT = int(os.environ.get("PREVIOUS_CHAMP_COUNT", "0"))
+except (ValueError, TypeError):
+    PREVIOUS_CHAMP_COUNT = 0
 
 
 def download_champ_img(name, image_url):
@@ -86,8 +91,8 @@ class LeagueloreCharacterSpider(scrapy.Spider):
             related_champions TEXT
         )
         """)
-        self.con.commit() 
-        
+        self.con.commit()
+
     def start_requests(self):
         logging.info("Starting Leaguelore Spider")
         self.build_db()
@@ -109,7 +114,6 @@ class LeagueloreCharacterSpider(scrapy.Spider):
                     ],
                 },
             )
-
 
     def parse(self, response, **kwargs):
         print("Starting Champions '%s'" % kwargs["lang"])
@@ -149,7 +153,7 @@ class LeagueloreCharacterSpider(scrapy.Spider):
                             "playwright": True,
                             "playwright_page_methods": [
                                 PageMethod("wait_for_load_state", "domcontentloaded"),
-                                PageMethod("wait_for_timeout", 5000),
+                                PageMethod("wait_for_timeout", 2000),
                             ],
                         },
                     )
@@ -161,7 +165,6 @@ class LeagueloreCharacterSpider(scrapy.Spider):
             )
         else:
             logging.error("[%s] No new champs found, skipping.", kwargs["lang"])
-           
 
     def parse_champion(self, response, **kwargs):
         role = (
