@@ -88,23 +88,27 @@ class LeagueloreCharacterSpider(scrapy.Spider):
         self.con.commit() 
         
     def start_requests(self):
-        print("Starting")
+        logging.info("Starting Leaguelore Spider")
         self.build_db()
         for lang in LANGS:
-            yield scrapy.Request(
+            url = (
                 "https://yz.lol.qq.com/zh_CN/champions/"
                 if lang == "zh_CN"
-                else "https://universe.leagueoflegends.com/%s/champions/" % lang,
+                else "https://universe.leagueoflegends.com/%s/champions/" % lang
+            )
+            logging.info("Yielding start request for [%s]: %s", lang, url)
+            yield scrapy.Request(
+                url,
                 cb_kwargs={"lang": lang},
                 meta={
                     "playwright": True,
                     "playwright_page_methods": [
                         PageMethod("wait_for_load_state", "domcontentloaded"),
-                        PageMethod("wait_for_timeout", 2000),
+                        PageMethod("wait_for_timeout", 5000),
                     ],
                 },
             )
-            time.sleep(1)
+
 
     def parse(self, response, **kwargs):
         print("Starting Champions '%s'" % kwargs["lang"])
