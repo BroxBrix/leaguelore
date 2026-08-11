@@ -85,7 +85,8 @@ class LeagueloreCharacterSpider(scrapy.Spider):
             related_champions TEXT
         )
         """)
-
+        self.con.commit() 
+        
     def start_requests(self):
         print("Starting")
         self.build_db()
