@@ -94,7 +94,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: ${{ steps.kindle.outputs.HAS_ALL_CHAMPS == 'true' && steps.kindle.outputs.NEW_CHAMP_COUNT != steps.last-release.outputs.PREVIOUS_CHAMP_COUNT }}
+        if: ${{ steps.kindle.outputs.NEW_CHAMP_COUNT != '0' }}
         with:
           name: "League of Legends lore - ${{ steps.kindle.outputs.NEW_CHAMP_COUNT }} Champions"
           tag_name: "lollore-${{ steps.kindle.outputs.NEW_CHAMP_COUNT }}"
