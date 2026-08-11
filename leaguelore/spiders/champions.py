@@ -108,15 +108,15 @@ class LeagueloreCharacterSpider(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         print("Starting Champions '%s'" % kwargs["lang"])
-        champ_blocks = response.css("li.item_30l8")
+        champ_blocks = response.css("a[href*='/champion/']") or response.css("li[class*='item_']")
         print(
             "Found new champs (%s)? %s"
             % (len(champ_blocks), len(champ_blocks) > PREVIOUS_CHAMP_COUNT)
         )
-        if len(champ_blocks) > PREVIOUS_CHAMP_COUNT:
+        if len(champ_blocks) > PREVIOUS_CHAMP_COUNT or len(champ_blocks) > 0:
             for champion in champ_blocks:
-                champ_url = champion.css("a")[0].attrib["href"]
-                champ_code = champ_url.split("/")[-2]
+                champ_url = champion.attrib["href"] if "href" in champion.attrib else champion.css("a")[0].attrib["href"]
+                champ_code = champ_url.rstrip("/").split("/")[-1]
                 self.cur.execute(
                     "select * from champions where champion = ? AND lang = ?",
                     (champ_code, kwargs["lang"]),
