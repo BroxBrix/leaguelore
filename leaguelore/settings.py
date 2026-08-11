@@ -9,7 +9,7 @@
 import logging
 
 BOT_NAME = "leaguelore"
-LOG_LEVEL = logging.ERROR
+LOG_LEVEL = logging.INFO
 LOG_FORMAT = "%(levelname)s: %(message)s"
 LOG_ENABLED = True
 # LOG_ENABLED = False
