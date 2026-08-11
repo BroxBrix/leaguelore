@@ -1,3 +1,4 @@
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 # Scrapy settings for leaguelore project
 #
 # For simplicity, this file contains only settings considered important or
@@ -107,5 +108,4 @@ HTTPCACHE_ENABLED = True
 
 # Set settings whose default value is deprecated to a future-proof value
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
